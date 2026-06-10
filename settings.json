@@ -68,18 +68,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/large-output-nudge.sh",
-            "timeout": 10
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
