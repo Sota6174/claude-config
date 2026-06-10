@@ -24,7 +24,7 @@
 > `settings.json` は OS 非依存に保つ。`.gitattributes` で `*.sh` は LF・`*.ps1` は CRLF を強制
 > （Windows で `*.sh` が CRLF 化すると shebang が `bash\r` になり Git Bash で壊れるため）。
 
-## 別端末でのセットアップ（新規）
+## 別端末でのセットアップ
 
 `~/.claude` がまだ無い、または空の端末:
 
