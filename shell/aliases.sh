@@ -1,5 +1,7 @@
 # Claude Code shell aliases (synced via claude-config repo)
-# Load from ~/.bashrc with:  source "$HOME/.claude/shell/aliases.sh"
+# alias 構文は bash/zsh 共通。使うシェルの rc から読み込む:
+#   macOS          : echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.zshrc
+#   Linux/Git Bash : echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
 
 # Claude Code: モデル/エフォート指定で起動
 alias claude-o='claude --model claude-opus-4-8 --effort xhigh'

@@ -16,6 +16,7 @@
 | `statusline.sh` | ステータスライン生成スクリプト |
 | `.mcp.json` | グローバル MCP サーバ定義 |
 | `hooks/` | カスタム hook スクリプト |
+| `shell/aliases.sh` | bash/zsh 共通の起動エイリアス（`claude-o` / `claude-s` 等） |
 
 > パスはすべて `~/.claude/...`（チルダ表記）なので、ユーザー名が違う端末でもそのまま動く。
 
@@ -54,6 +55,18 @@ git checkout -t origin/main -f   # 追跡対象の設定ファイルだけ上書
 
 - 通知は `hooks/notify.sh` が `notify.ps1` 経由で Windows バルーンを出す。PowerShell が PATH にあれば追加設定不要。
 - `.gitattributes` により `*.sh` は LF で展開される。手動で `core.autocrlf=true` にしていても shebang は壊れない。
+
+### シェルエイリアスの読み込み（任意）
+
+`shell/aliases.sh` の `claude-o`(Opus) / `claude-s`(sonnet) 等の起動エイリアスを使う場合、
+`alias` 構文は bash/zsh 共通なので、使うシェルの rc から読み込む（追記は一度だけ）:
+
+```bash
+# macOS（zsh）
+echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.zshrc
+# Linux / Windows(Git Bash)（bash）
+echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
+```
 
 ### プラグインの復元
 
