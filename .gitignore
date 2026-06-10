@@ -10,6 +10,7 @@
 
 # --- 2. 同期対象だけ復活（コア設定） ---
 !.gitignore
+!.gitattributes
 !README.md
 
 !CLAUDE.md
@@ -21,6 +22,10 @@
 # hooks ディレクトリとその中のスクリプト
 !hooks/
 !hooks/*
+
+# shell ディレクトリとその中のスクリプト（bash 起動エイリアス等）
+!shell/
+!shell/*
 
 # --- 3. 将来カスタム agents / skills を同期したくなったら下を有効化 ---
 #   ただし skills/ 内の symlink（例: find-skills -> ../../.agents/...）は

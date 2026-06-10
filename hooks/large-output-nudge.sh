@@ -6,11 +6,15 @@
 # Claude の context には入らない=0トークン)のみ。よってこの hook は出力を削る装置ではなく、
 # 「次回からフィルタする」ための人間向けリマインダーに徹する。
 #
-# macOS(Darwin/zsh) 前提の注意:
-#   - 非対話シェルでは grep が ugrep alias に解決されないため grep -P 等に依存しない。
-#   - パースは jq 一本(/opt/homebrew/bin/jq)。jq 不在なら黙って no-op。
+# 実行環境メモ (macOS / Windows(Git Bash) / Linux で共通動作):
+#   - grep -P 等の GNU 拡張に依存しない（移植性のため）。
+#   - パースは jq 一本。jq 不在なら黙って no-op（Windows は winget/scoop 等で要導入）。
+#   - OS 差分は uname 分岐に集約。macOS は homebrew の jq を PATH 前置する。
 set -euo pipefail
-export PATH="/opt/homebrew/bin:/usr/bin:/bin:$PATH"
+case "$(uname -s)" in
+  Darwin) export PATH="/opt/homebrew/bin:/usr/bin:/bin:$PATH" ;;
+  *)      export PATH="/usr/bin:/bin:$PATH" ;;
+esac
 
 command -v jq >/dev/null 2>&1 || exit 0
 

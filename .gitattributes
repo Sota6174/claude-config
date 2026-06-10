@@ -1,0 +1,7 @@
+# シェルスクリプトは常に LF で展開する。
+# Windows (core.autocrlf=true) で CRLF 化されるとシェバングが "bash\r" になり、
+# Git Bash での実行が壊れるため eol=lf を強制する。macOS 側は元から LF なので無害。
+*.sh text eol=lf
+
+# PowerShell スクリプトは Windows 慣習に合わせて CRLF。
+*.ps1 text eol=crlf

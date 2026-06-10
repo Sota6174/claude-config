@@ -19,6 +19,11 @@
 
 > パスはすべて `~/.claude/...`（チルダ表記）なので、ユーザー名が違う端末でもそのまま動く。
 
+> **クロスプラットフォーム方針:** 単一 `main` ブランチで全 OS をカバーする。OS 依存は
+> `hooks/notify.sh`（通知）と `hooks/large-output-nudge.sh`（jq の PATH）の `uname` 分岐に集約し、
+> `settings.json` は OS 非依存に保つ。`.gitattributes` で `*.sh` は LF・`*.ps1` は CRLF を強制
+> （Windows で `*.sh` が CRLF 化すると shebang が `bash\r` になり Git Bash で壊れるため）。
+
 ## 別端末でのセットアップ（新規）
 
 `~/.claude` がまだ無い、または空の端末:
@@ -37,6 +42,18 @@ git remote add origin git@github.com:Sota6174/claude-config.git
 git fetch origin
 git checkout -t origin/main -f   # 追跡対象の設定ファイルだけ上書きされる（状態ファイルは無傷）
 ```
+
+### Windows (Git Bash) の追加手順
+
+- 操作は **Git Bash** で行う（`~` は `C:\Users\<name>` に解決される）。clone/init 手順は上記と共通。
+- **jq の導入が必須**（`statusline.sh` と `large-output-nudge.sh` が依存）。未導入だと両者は黙って no-op する:
+
+  ```bash
+  winget install jqlang.jq      # もしくは: scoop install jq
+  ```
+
+- 通知は `hooks/notify.sh` が `notify.ps1` 経由で Windows バルーンを出す。PowerShell が PATH にあれば追加設定不要。
+- `.gitattributes` により `*.sh` は LF で展開される。手動で `core.autocrlf=true` にしていても shebang は壊れない。
 
 ### プラグインの復元
 

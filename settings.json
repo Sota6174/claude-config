@@ -15,7 +15,13 @@
       "Bash(which *)",
       "Bash(whoami)",
       "Bash(date *)",
-      "Bash(date)"
+      "Bash(date)",
+      "Bash(Measure-Object *)",
+      "Bash(Measure-Object)",
+      "Bash(Get-Command *)",
+      "Bash(gcm *)",
+      "Bash(Get-Date *)",
+      "Bash(Get-Date)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -47,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude Codeが許可を求めています\" with title \"Claude Code\" subtitle \"確認待ち\"'"
+            "command": "~/.claude/hooks/notify.sh \"Claude Code\" \"確認待ち — 許可を求めています\""
           }
         ]
       }
@@ -58,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"タスクが完了しました\" with title \"Claude Code\" subtitle \"処理終了\"'"
+            "command": "~/.claude/hooks/notify.sh \"Claude Code\" \"完了 — タスクが終了しました\""
           }
         ]
       }
@@ -91,7 +97,7 @@
     "claude-md-management@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "chrome-devtools-mcp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "code-review@claude-plugins-official": true
   },
   "language": "日本語",
   "effortLevel": "xhigh",
@@ -100,8 +106,9 @@
     "enabled": false,
     "mode": "hold"
   },
+  "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "skipWorkflowUsageWarning": true
+  "model": "sonnet"
 }
