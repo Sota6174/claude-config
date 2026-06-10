@@ -24,7 +24,7 @@
 `~/.claude` がまだ無い、または空の端末:
 
 ```bash
-git clone git@github.com:<USER>/<REPO>.git ~/.claude
+git clone git@github.com:Sota6174/claude-config.git ~/.claude
 ```
 
 `~/.claude` が既に存在する端末（Claude Code 使用済み）は、ディレクトリを消さずに
@@ -33,7 +33,7 @@ git clone git@github.com:<USER>/<REPO>.git ~/.claude
 ```bash
 cd ~/.claude
 git init
-git remote add origin git@github.com:<USER>/<REPO>.git
+git remote add origin git@github.com:Sota6174/claude-config.git
 git fetch origin
 git checkout -t origin/main -f   # 追跡対象の設定ファイルだけ上書きされる（状態ファイルは無傷）
 ```
