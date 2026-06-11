@@ -90,6 +90,7 @@
   "language": "日本語",
   "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
+  "cleanupPeriodDays": 7,
   "voice": {
     "enabled": false,
     "mode": "hold"
