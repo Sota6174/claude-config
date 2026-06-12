@@ -27,6 +27,25 @@
 
 ## 別端末でのセットアップ
 
+### Claude Code のインストール（重要）
+
+**`npm install -g @anthropic-ai/claude-code` は使わない。** mise / nodenv / nvm 等でプロジェクトごとに Node バージョンを pin している環境では、そのディレクトリに入ると `claude` が見つからなくなる（mise シムが拾って `No version is set for shim: claude` エラーになるケースもある）。
+
+代わりに **Node 非依存のネイティブ版インストーラー** を使う:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+# → ~/.local/bin/claude にインストールされる
+```
+
+mise シムが残っていたら撤去する:
+
+```bash
+rm -f ~/.local/share/mise/shims/claude
+```
+
+---
+
 `~/.claude` がまだ無い、または空の端末:
 
 ```bash
