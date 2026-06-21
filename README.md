@@ -77,8 +77,10 @@ git checkout -t origin/main -f   # 追跡対象の設定ファイルだけ上書
 
 ### シェルエイリアスの読み込み（任意）
 
-`shell/aliases.sh` の `claude-o`(Opus) / `claude-s`(sonnet) 等の起動エイリアスを使う場合、
-`alias` 構文は bash/zsh 共通なので、使うシェルの rc から読み込む（追記は一度だけ）:
+`claude-o`(Opus) / `claude-ox`(Opus xhigh) / `claude-s`(Sonnet) 等の起動エイリアスを使う場合、
+シェルの rc / プロファイルから読み込む（追記は一度だけ）:
+
+**bash / zsh（macOS・Linux・Git Bash）**
 
 ```bash
 # macOS（zsh）
@@ -86,6 +88,20 @@ echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.zshrc
 # Linux / Windows(Git Bash)（bash）
 echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
 ```
+
+**PowerShell（Windows）**
+
+`shell/aliases.ps1` を用意してあるので、`$PROFILE` に dot-source を追記する:
+
+```powershell
+# プロファイルのディレクトリを作成（初回のみ）
+New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force
+# dot-source を追記
+Add-Content -Path $PROFILE -Value '. "$HOME\.claude\shell\aliases.ps1"'
+```
+
+> PowerShell では `alias` 構文は使えないため `function` で定義している。
+> `@args` により `claude-s --dangerously-skip-permissions` のような追加フラグも渡せる。
 
 ### プラグインの復元
 
