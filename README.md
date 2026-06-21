@@ -95,10 +95,14 @@ echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
 
 ```powershell
 # プロファイルのディレクトリを作成（初回のみ）
-New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force
-# dot-source を追記
+New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force | Out-Null
+# 現在実行中の PowerShell 用プロファイルに追記
 Add-Content -Path $PROFILE -Value '. "$HOME\.claude\shell\aliases.ps1"'
 ```
+
+> `$PROFILE` は実行中のバージョン（PowerShell Core = `pwsh.exe` / Windows PowerShell = `powershell.exe`）
+> に応じたプロファイルパスを返す。両方使い分けたい場合は、それぞれのターミナルで上記を 1 回ずつ実行する。
+> 現在のバージョンは `$PSVersionTable.PSEdition`（`Core` or `Desktop`）で確認できる。
 
 > PowerShell では `alias` 構文は使えないため `function` で定義している。
 > `@args` により `claude-s --dangerously-skip-permissions` のような追加フラグも渡せる。

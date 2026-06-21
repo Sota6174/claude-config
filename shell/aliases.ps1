@@ -1,6 +1,5 @@
 # Claude Code PowerShell aliases (synced via claude-config repo)
-# 使うシェルのプロファイルから読み込む:
-#   PowerShell : echo '. "$HOME\.claude\shell\aliases.ps1"' >> $PROFILE
+# セットアップ手順は README.md の「シェルエイリアスの読み込み」を参照。
 
 # Claude Code: モデル/エフォート指定で起動
 function claude-o  { claude --model claude-opus-4-7 --effort high @args }
