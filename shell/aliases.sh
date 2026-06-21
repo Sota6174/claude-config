@@ -4,6 +4,6 @@
 #   Linux/Git Bash : echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
 
 # Claude Code: モデル/エフォート指定で起動
-alias claude-o='claude --model claude-opus-4-8 --effort xhigh'
-alias claude-f='claude --model claude-fable-5 --effort xhigh'
-alias claude-s='claude --model sonnet --effort xhigh'
+alias claude-o='claude --model claude-opus-4-7 --effort high'
+alias claude-ox='claude --model claude-opus-4-7 --effort xhigh'
+alias claude-s='claude --model sonnet --effort high'

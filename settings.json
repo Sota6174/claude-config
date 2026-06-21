@@ -89,13 +89,13 @@
     "code-review@claude-plugins-official": true
   },
   "language": "日本語",
-  "effortLevel": "xhigh",
-  "autoUpdatesChannel": "stable",
+  "effortLevel": "high",
   "voice": {
-    "enabled": false,
+    "enabled": true,
     "mode": "hold"
   },
   "skipWorkflowUsageWarning": true,
+  "theme": "dark",
   "autoCompactEnabled": true,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true
