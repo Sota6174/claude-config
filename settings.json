@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "cleanupPeriodDays": 7,
   "permissions": {
     "allow": [
       "WebFetch",
@@ -90,7 +91,6 @@
   "language": "日本語",
   "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
-  "cleanupPeriodDays": 7,
   "voice": {
     "enabled": false,
     "mode": "hold"
@@ -98,6 +98,5 @@
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "remoteControlAtStartup": false,
-  "agentPushNotifEnabled": true,
-  "model": "sonnet"
+  "agentPushNotifEnabled": true
 }
