@@ -3,5 +3,7 @@
 # Git Bash での実行が壊れるため eol=lf を強制する。macOS 側は元から LF なので無害。
 *.sh text eol=lf
 
-# PowerShell スクリプトは Windows 慣習に合わせて CRLF。
-*.ps1 text eol=crlf
+# PowerShell スクリプトも LF に統一する。
+# PowerShell Core は Windows/mac いずれも LF を問題なく実行でき、
+# working copy が両環境で一致するため diff/blame が安定する。
+*.ps1 text eol=lf

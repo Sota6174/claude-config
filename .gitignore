@@ -27,13 +27,21 @@
 !shell/
 !shell/*
 
-# --- 3. 将来カスタム agents / skills を同期したくなったら下を有効化 ---
-#   ただし skills/ 内の symlink（例: find-skills -> ../../.agents/...）は
-#   端末固有なので追跡しないこと。実体の *.md だけを対象にする。
-# !agents/
-# !agents/*.md
-# !skills/
-# !skills/**/*.md
+# --- 3. カスタム agents / skills / commands / output-styles を同期 ---
+#   skills/ は SKILL.md だけでなく references/ や scripts/ も含めるため
+#   ** で広めに取る。端末固有 symlink（例: find-skills -> ../../.agents/...）
+#   が現れたら、その都度ここで個別に除外すること。
+!agents/
+!agents/**
+
+!skills/
+!skills/**
+
+!commands/
+!commands/**
+
+!output-styles/
+!output-styles/**
 
 # --- 4. 許可ディレクトリ内でも常に無視するノイズ ---
 .DS_Store

@@ -16,13 +16,7 @@
       "Bash(which *)",
       "Bash(whoami)",
       "Bash(date *)",
-      "Bash(date)",
-      "Bash(Measure-Object *)",
-      "Bash(Measure-Object)",
-      "Bash(Get-Command *)",
-      "Bash(gcm *)",
-      "Bash(Get-Date *)",
-      "Bash(Get-Date)"
+      "Bash(date)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -48,13 +42,32 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/new-project-security-prompt.sh"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/new-project-security-prompt.ps1"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/notify.sh \"Claude Code\" \"確認待ち — 許可を求めています\""
+            "command": "bash ~/.claude/hooks/notify.sh \"Claude Code\" \"確認待ち — 許可を求めています\""
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/notify.ps1 -Title \"Claude Code\" -Message \"確認待ち — 許可を求めています\""
           }
         ]
       }
@@ -65,7 +78,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/notify.sh \"Claude Code\" \"完了 — タスクが終了しました\""
+            "command": "bash ~/.claude/hooks/notify.sh \"Claude Code\" \"完了 — タスクが終了しました\""
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/notify.ps1 -Title \"Claude Code\" -Message \"完了 — タスクが終了しました\""
           }
         ]
       }
@@ -86,7 +103,10 @@
     "claude-md-management@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "chrome-devtools-mcp@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true
+    "code-review@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true
   },
   "language": "日本語",
   "effortLevel": "high",

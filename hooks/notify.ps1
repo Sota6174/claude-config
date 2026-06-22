@@ -3,8 +3,16 @@ param(
   [string]$Message = ""
 )
 # Windows balloon/toast notification used by Claude Code hooks (replaces macOS osascript).
-# Invoked detached from notify.sh; sleeps briefly so the notification has time to render.
+# ASCII-only source: Windows PowerShell 5.1 reads BOM-less scripts as the legacy ANSI
+# codepage (Shift_JIS on Japanese Windows), which corrupts any non-ASCII tokens here.
+# Keep Title/Message payloads as runtime arguments (UTF-16 string params handle Japanese fine).
 $ErrorActionPreference = "SilentlyContinue"
+
+# Skip on non-Windows pwsh-core (mac/Linux use notify.sh).
+if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) {
+  exit 0
+}
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 

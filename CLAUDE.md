@@ -33,15 +33,32 @@
 
 トリガー該当か自信がない場合は **確認しない側に倒す**（過剰確認は作業効率と学習リズムを阻害するため）。ただし「後戻りコストが高そう」(設定ファイル/永続データ/外部公開物の生成・変更、長文ドキュメントの全面書き換え等) と感じたら確認する側に倒す。
 
+## 取り扱い原則
+
+- **日付・時刻はすべて JST** で扱う。会話・コミット・ログ・ファイル名のいずれも JST 表記を既定とし、米国市場・UTC 等の他 TZ を出すときは JST 併記する
+- **秘密情報を Edit/Write で書かない**。API キー・トークン・パスワード・個人を特定するシークレットはコードに直書きしない。環境変数 / `.env*` / シークレットマネージャ経由とし、参照のみ。`.env*` は settings.json で Read deny 済みだが、書き込み側でもこの原則を徹底する
+
+## トークン運用の既定
+
+- **ファイルは Grep でピンポイント→該当範囲のみ Read**。全読みは「短いファイル (≲300 行) であることを確認した」「他に手段がない」ときだけ
+- **広範な探索 (「どこで X してる？」「Y の全用例」) は `Explore` subagent に委譲**する。結果が要約だけ返るため本セッションの context を節約できる
+- **軽い修正は `/effort low`、設計判断は `high`**。グローバルの `effortLevel: "high"` 固定で簡単タスクを走らせない
+
+## hook 作成時の規約
+
+- **hook はクロスプラットフォーム前提で書く**。ユーザーの実環境は Windows(PowerShell) / mac(zsh) の 2 機種運用。`.sh` だけで完結しない
+- **OS 別に 2 系統用意**: 同名のスクリプトを `~/.claude/hooks/<name>.sh`（mac/Linux 用 bash）と `~/.claude/hooks/<name>.ps1`（Windows 用 PowerShell）として並列に置く
+- **各スクリプトは対象外 OS で即 `exit 0`**: `.sh` 側は `case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) exit 0 ;; esac`、`.ps1` 側は `if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) { exit 0 }` で防御
+- **`settings.json` の `hooks` 配列に両系統を並列登録**:
+  - `bash ~/.claude/hooks/<name>.sh ...`（mac/Linux で動く）
+  - `powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/<name>.ps1 ...`（Windows で動く）
+  - 各 OS では片方が `command not found` で失敗するが Claude Code は黙殺する。これを許容する
+- **PowerShell の here-string は `@'...'@` を優先**。`@"..."@` だと `$schema` 等が変数展開されて壊れる
+- **Windows 上の Python は `PYTHONIOENCODING=utf-8` を明示**。デフォルトの cp932 だと日本語 em-dash 等で JSON 出力が落ちる（`.sh` で python を介する場合のみ。`.ps1` は `[Console]::OutputEncoding = [UTF8Encoding]::new($false)` で対応）
+
 ## ツール運用の落とし穴
 
 ### `gh issue view` で issue 本文を読むとき
 
 - issue **本文**を読むなら `gh issue view <n>`（`--comments` を付けない）。
 - `--comments` は **コメント一覧のみ** を表示するフラグ。コメント0件の issue では出力が空（exit 0・stdout/stderr 0 バイト）になる。これは正常動作であり、issue が読めない・コマンド失敗ではない。空出力なら `--comments` を外して取り直す。
-
-### Grep / Glob ツールが無い実行環境がある
-
-- 環境によっては `Grep` / `Glob` ツールが提供されない（ツール一覧にも `ToolSearch` の deferred 一覧にも存在しない）。これは hook によるブロックではなく、その harness 構成の仕様。
-- その場合は Bash の `grep` / `rg` か `Explore` サブエージェントで代替する（これが正しいフォールバック）。
-- 独立した別事象を因果で結びつけない。「あるコマンドが空出力だった」ことと「Grep が使えない」ことは無関係。一方を他方の原因にせず、それぞれ独立に対処する。
