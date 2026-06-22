@@ -7,3 +7,8 @@
 # PowerShell Core は Windows/mac いずれも LF を問題なく実行でき、
 # working copy が両環境で一致するため diff/blame が安定する。
 *.ps1 text eol=lf
+
+# スクリプトから読み込まれるテキスト本文も LF に統一する。
+# Windows で CRLF 化されると bash で読んだ際に \r が末尾に混入し、
+# 後段に渡されるコンテキスト文字列を壊すため。
+*.txt text eol=lf

@@ -1,0 +1,31 @@
+[新規プロジェクト検出 — security-guidance 推奨設定の提案]
+
+現在の作業ディレクトリにプロジェクト用 .claude/settings.json が存在しません。新規プロジェクトとして扱い、以下の手順でユーザーに security-guidance プラグインの取り扱いを確認してください。
+
+参照: c:\Users\Sota\Documents\趣味\claude公式ドキュメント\05_security-guidance.md (§8〜9)
+
+【実施手順】
+
+1. AskUserQuestion ツールで「このプロジェクトで security-guidance プラグインを有効にしますか？」と確認する。選択肢は以下の3つ:
+   - 「有効のまま (推奨)」: グローバル設定で既に enable 済みなので、空の {} だけ書いた .claude/settings.json を作成して再提案を止める
+   - 「このプロジェクトでは無効化」: .claude/settings.json を作成し、enabledPlugins で security-guidance@claude-plugins-official を false にする
+   - 「いまは決めない」: 何もしない（次回セッション開始時にまた提案される）
+
+2. ユーザーの回答に応じてファイル操作を実行する:
+   - .claude/ ディレクトリが無ければ mkdir で作成
+   - 既存の settings.json があれば**絶対に上書きしない**（hook 判定が壊れているので一旦中断してユーザーに知らせる）
+   - 「無効化」を選んだ場合に書くべき内容:
+     {
+       "$schema": "https://json.schemastore.org/claude-code-settings.json",
+       "enabledPlugins": {
+         "security-guidance@claude-plugins-official": false
+       }
+     }
+
+3. このメッセージは「新規プロジェクト検出」時のみ表示される。.claude/settings.json が一度作成されれば以降は提案されない。
+
+【注意】
+
+- 投資・Discord Bot・Web フェッチ系のプロジェクトでは有効推奨（API キー / SQL / HTML 生成 / 外部 fetch がある）
+- 囲碁・ローカル分析・読み物系の自分専用プロジェクトでは無効化候補（外部入力少なく、API コスト / context 浪費の方が痛い）
+- 判断材料が足りなければ参照ドキュメントを Read してユーザーに簡潔に要約してから尋ねること
