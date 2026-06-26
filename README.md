@@ -1,4 +1,4 @@
-# Claude Code グローバル設定
+# Claude Code グローバル設定 (Windows)
 
 `~/.claude` のうち **手書きの設定ファイルだけ** を git 管理して、複数端末で同期するためのリポジトリ。
 
@@ -13,35 +13,34 @@
 | `CLAUDE.md` | 全プロジェクト共通のグローバル規約 |
 | `settings.json` | 権限・hooks・statusLine・有効プラグイン・言語など |
 | `keybindings.json` | キーバインド |
-| `statusline.sh` | ステータスライン生成スクリプト |
+| `statusline.sh` | ステータスライン生成スクリプト（Git Bash + jq で動作） |
 | `.mcp.json` | グローバル MCP サーバ定義 |
-| `hooks/` | カスタム hook スクリプト |
-| `shell/aliases.sh` | bash/zsh 共通の起動エイリアス（`claude-o` / `claude-s` 等） |
+| `hooks/` | カスタム hook スクリプト（PowerShell） |
+| `shell/aliases.ps1` | PowerShell 用の起動エイリアス（`claude-o` / `claude-s` 等） |
 
-> パスはすべて `~/.claude/...`（チルダ表記）なので、ユーザー名が違う端末でもそのまま動く。
+> パスはすべて `~/.claude/...`（チルダ表記）。PowerShell でも `~` は `$HOME` に解決されるのでそのまま動く。
 
-> **クロスプラットフォーム方針:** 単一 `main` ブランチで全 OS をカバーする。OS 依存は
-> `hooks/notify.sh`（通知）の `uname` 分岐に集約し、
-> `settings.json` は OS 非依存に保つ。`.gitattributes` で `*.sh` は LF・`*.ps1` は CRLF を強制
-> （Windows で `*.sh` が CRLF 化すると shebang が `bash\r` になり Git Bash で壊れるため）。
+> **対象 OS:** Windows + PowerShell 専用。Mac/Linux 用の設定は別リポジトリ
+> [claude-config-mac](https://github.com/Sota6174/claude-config-mac) で管理している。
+> Windows ↔ Mac 方向で共通変更を取り込みたい場合は、相手側で本リポジトリを
+> `remote` として追加し `git cherry-pick` で必要分だけ拾う。
 
 ## 別端末でのセットアップ
 
 ### Claude Code のインストール（重要）
 
-**`npm install -g @anthropic-ai/claude-code` は使わない。** mise / nodenv / nvm 等でプロジェクトごとに Node バージョンを pin している環境では、そのディレクトリに入ると `claude` が見つからなくなる（mise シムが拾って `No version is set for shim: claude` エラーになるケースもある）。
+**`npm install -g @anthropic-ai/claude-code` は使わない。** mise / nodenv / nvm 等でプロジェクトごとに Node バージョンを pin している環境では、そのディレクトリに入ると `claude` が見つからなくなる。
 
 代わりに **Node 非依存のネイティブ版インストーラー** を使う:
 
-```bash
-curl -fsSL https://claude.ai/install.sh | bash
-# → ~/.local/bin/claude にインストールされる
+```powershell
+# PowerShell
+irm https://claude.ai/install.ps1 | iex
 ```
 
-mise シムが残っていたら撤去する:
-
 ```bash
-rm -f ~/.local/share/mise/shims/claude
+# 代替: Git Bash
+curl -fsSL https://claude.ai/install.sh | bash
 ```
 
 ---
@@ -49,7 +48,7 @@ rm -f ~/.local/share/mise/shims/claude
 `~/.claude` がまだ無い、または空の端末:
 
 ```bash
-git clone git@github.com:Sota6174/claude-config.git ~/.claude
+git clone git@github.com:Sota6174/claude-config-windows.git ~/.claude
 ```
 
 `~/.claude` が既に存在する端末（Claude Code 使用済み）は、ディレクトリを消さずに
@@ -58,40 +57,26 @@ git clone git@github.com:Sota6174/claude-config.git ~/.claude
 ```bash
 cd ~/.claude
 git init
-git remote add origin git@github.com:Sota6174/claude-config.git
+git remote add origin git@github.com:Sota6174/claude-config-windows.git
 git fetch origin
 git checkout -t origin/main -f   # 追跡対象の設定ファイルだけ上書きされる（状態ファイルは無傷）
 ```
 
-### Windows (Git Bash) の追加手順
+### 依存ツール
 
-- 操作は **Git Bash** で行う（`~` は `C:\Users\<name>` に解決される）。clone/init 手順は上記と共通。
-- **jq の導入が必須**（`statusline.sh` が依存）。未導入だと黙って no-op する:
+- **Git for Windows (Git Bash)** — `statusline.sh` 実行に必要。git 同梱の bash を使う
+- **jq** — `statusline.sh` が依存。未導入だと statusline が黙って no-op になる
 
-  ```bash
+  ```powershell
   winget install jqlang.jq      # もしくは: scoop install jq
   ```
 
-- 通知は `hooks/notify.sh` が `notify.ps1` 経由で Windows バルーンを出す。PowerShell が PATH にあれば追加設定不要。
-- `.gitattributes` により `*.sh` は LF で展開される。手動で `core.autocrlf=true` にしていても shebang は壊れない。
+- **PowerShell** — 5.1 (Windows 標準) もしくは 7.x (Core)。hook の実行に使う
 
 ### シェルエイリアスの読み込み（任意）
 
 `claude-o`(Opus) / `claude-ox`(Opus xhigh) / `claude-s`(Sonnet) 等の起動エイリアスを使う場合、
-シェルの rc / プロファイルから読み込む（追記は一度だけ）:
-
-**bash / zsh（macOS・Linux・Git Bash）**
-
-```bash
-# macOS（zsh）
-echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.zshrc
-# Linux / Windows(Git Bash)（bash）
-echo 'source "$HOME/.claude/shell/aliases.sh"' >> ~/.bashrc
-```
-
-**PowerShell（Windows）**
-
-`shell/aliases.ps1` を用意してあるので、`$PROFILE` に dot-source を追記する:
+`$PROFILE` に dot-source を追記する:
 
 ```powershell
 # プロファイルのディレクトリを作成（初回のみ）
@@ -104,7 +89,7 @@ Add-Content -Path $PROFILE -Value '. "$HOME\.claude\shell\aliases.ps1"'
 > に応じたプロファイルパスを返す。両方使い分けたい場合は、それぞれのターミナルで上記を 1 回ずつ実行する。
 > 現在のバージョンは `$PSVersionTable.PSEdition`（`Core` or `Desktop`）で確認できる。
 
-> PowerShell では `alias` 構文は使えないため `function` で定義している。
+> PowerShell では `alias` 構文に追加引数を渡せないため `function` で定義している。
 > `@args` により `claude-s --dangerously-skip-permissions` のような追加フラグも渡せる。
 
 ### プラグインの復元
@@ -116,8 +101,8 @@ Add-Content -Path $PROFILE -Value '. "$HOME\.claude\shell\aliases.ps1"'
 
 ### 認証
 
-OAuth トークンは macOS Keychain（Linux は `~/.claude/.credentials.json`）に保存され、
-このリポジトリには含まれない。各端末で `claude` 初回起動時にログインする。
+OAuth トークンは `~/.claude/.credentials.json` に保存され、このリポジトリには含まれない
+（`.gitignore` で除外済み）。各端末で `claude` 初回起動時にログインする。
 
 ## 日常運用
 

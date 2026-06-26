@@ -46,15 +46,13 @@
 
 ## hook 作成時の規約
 
-- **hook はクロスプラットフォーム前提で書く**。ユーザーの実環境は Windows(PowerShell) / mac(zsh) の 2 機種運用。`.sh` だけで完結しない
-- **OS 別に 2 系統用意**: 同名のスクリプトを `~/.claude/hooks/<name>.sh`（mac/Linux 用 bash）と `~/.claude/hooks/<name>.ps1`（Windows 用 PowerShell）として並列に置く
-- **各スクリプトは対象外 OS で即 `exit 0`**: `.sh` 側は `case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) exit 0 ;; esac`、`.ps1` 側は `if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) { exit 0 }` で防御
-- **`settings.json` の `hooks` 配列に両系統を並列登録**:
-  - `bash ~/.claude/hooks/<name>.sh ...`（mac/Linux で動く）
-  - `powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/<name>.ps1 ...`（Windows で動く）
-  - 各 OS では片方が `command not found` で失敗するが Claude Code は黙殺する。これを許容する
+> 本リポジトリは **Windows 専用**（同期先: [claude-config-windows](https://github.com/Sota6174/claude-config-windows)）。Mac 用 hook はミラーリポジトリ [claude-config-mac](https://github.com/Sota6174/claude-config-mac) 側で `.sh` として管理しているため、本機の hook は PowerShell 1 系統のみ扱う。
+
+- **hook は PowerShell (`.ps1`) で書く**。`settings.json` の `hooks` 配列には `powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/<name>.ps1 ...` の形で登録する
+- **冒頭で非 Windows 防御**: `if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) { exit 0 }` を入れておく。pwsh-core が mac/Linux にも入っているため、Mac 側で誤って実行されたときの保険
 - **PowerShell の here-string は `@'...'@` を優先**。`@"..."@` だと `$schema` 等が変数展開されて壊れる
-- **Windows 上の Python は `PYTHONIOENCODING=utf-8` を明示**。デフォルトの cp932 だと日本語 em-dash 等で JSON 出力が落ちる（`.sh` で python を介する場合のみ。`.ps1` は `[Console]::OutputEncoding = [UTF8Encoding]::new($false)` で対応）
+- **Windows PowerShell 5.1 は BOM 無しスクリプトを Shift_JIS で読む**（日本語 Windows のデフォルト ANSI コードページ）。スクリプト本体は **ASCII のみで書く**。日本語本文が要るときは外部 `.txt` を `[System.IO.File]::ReadAllText($path, [System.Text.UTF8Encoding]::new($false))` で読む（`hooks/new-project-security-prompt.ps1` 参照）
+- **標準出力は UTF-8 を明示**: `[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)`。デフォルトのままだと日本語 em-dash 等で JSON 出力が落ちる
 
 ## ツール運用の落とし穴
 

@@ -48,10 +48,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/new-project-security-prompt.sh"
-          },
-          {
-            "type": "command",
             "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/new-project-security-prompt.ps1"
           }
         ]
@@ -63,10 +59,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/notify.sh \"Claude Code\" \"確認待ち — 許可を求めています\""
-          },
-          {
-            "type": "command",
             "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/notify.ps1 -Title \"Claude Code\" -Message \"確認待ち — 許可を求めています\""
           }
         ]
@@ -76,10 +68,6 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/notify.sh \"Claude Code\" \"完了 — タスクが終了しました\""
-          },
           {
             "type": "command",
             "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/notify.ps1 -Title \"Claude Code\" -Message \"完了 — タスクが終了しました\""
@@ -106,10 +94,20 @@
     "code-review@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
-    "hookify@claude-plugins-official": true
+    "hookify@claude-plugins-official": true,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "language": "日本語",
   "effortLevel": "high",
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
